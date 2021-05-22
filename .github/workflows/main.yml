@@ -1,0 +1,23 @@
+name: CI
+
+on: [push]
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+        - os: windows-latest
+        - os: windows-latest
+          configure: -T ClangCL
+        - os: ubuntu-latest
+          configure: -DCMAKE_CXX_COMPILER=clang
+        - os: macos-latest
+    steps:
+    - uses: actions/checkout@v2
+    - run: cmake -B build ${{ matrix.configure }}
+    - run: cmake --build build --config Debug
+    - run: cmake --build build --config Release
+
